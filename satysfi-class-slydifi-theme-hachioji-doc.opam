@@ -1,0 +1,31 @@
+opam-version: "2.0"
+name: "satysfi-class-slydifi-theme-hachioji-doc"
+version: "0.1.0"
+synopsis: "A SATySFi document class for creating presentations slides"
+description: """A SATySFi document class for creating presentations slides."""
+
+maintainer: "Tatsumi Gamou <tatsumigamou@yahoo.co.jp>"
+authors: "Tatsumi Gamou <tatsumigamou@yahoo.co.jp>"
+license: "MIT"
+homepage: "https://github.com/gamoutatsumi/satysfi-class-slydifi-theme-hachioji"
+bug-reports: "https://github.com/gamoutatsumi/satysfi-class-slydifi-theme-hachioji"
+dev-repo: "git+https://github.com/gamoutatsumi/satysfi-class-slydifi-theme-hachioji.git"
+
+depends: [
+  "satysfi" {>= "0.0.6" & < "0.0.7"}
+  "satyrographos" {>= "0.0.2" & < "0.0.3"}
+  "satysfi-class-slydifi" {= "0.3.0"}
+  "satysfi-easytable" {>= "1.0.0"}
+]
+build: [
+  ["satyrographos" "opam" "build"
+   "--name" "class-slydifi-theme-hachioji-doc"
+   "--prefix" "%{prefix}%"
+   "--script" "%{build}%/Satyristes"]
+]
+install: [
+  ["satyrographos" "opam" "install"
+   "--name" "class-slydifi-theme-hachioji-doc"
+   "--prefix" "%{prefix}%"
+   "--script" "%{build}%/Satyristes"]
+]

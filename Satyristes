@@ -1,0 +1,31 @@
+;; For Satyrographos 0.0.2 series
+(version 0.0.2)
+
+(library
+  (name "class-slydifi-theme-hachioji")
+  (version "0.1.0")
+  (sources
+    ((packageDir "src")
+     ))
+  (opam "satysfi-class-slydifi-theme-hachioji.opam")
+  (dependencies
+    ((enumitem ())
+     (figbox ())
+     (base ())
+     )))
+
+(libraryDoc
+  (name "class-slydifi-theme-hachioji-doc")
+  (version "0.1.0")
+  (workingDirectory "doc")
+  (build
+    ((satysfi "slydifi.saty" "-o" "slydifi.pdf")))
+  (sources
+    ((doc "slydifi.pdf" "slydifi.pdf")))
+  (opam "satysfi-clas-slydifi-theme-hachioji-doc.opam")
+  (dependencies
+    ((class-slydifi ())
+     (easytable ())
+     (class-slydifi-theme-hachioji ())
+     )))
+; vim: set filetype=lisp:

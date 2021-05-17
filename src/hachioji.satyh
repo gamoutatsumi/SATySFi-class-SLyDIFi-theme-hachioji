@@ -1,6 +1,7 @@
 @require: gr
 @require: math
 @require: list
+@require: code
 @require: annot
 @require: class-slydifi/slydifi
 @require: class-slydifi/functions/color

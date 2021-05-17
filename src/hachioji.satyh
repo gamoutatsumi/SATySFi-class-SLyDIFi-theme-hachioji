@@ -108,14 +108,14 @@ end = struct
   |)
 
   let cfg-font-normal = (|
-    size             = 20pt;
+    size             = 16pt;
     font-latin       = (`fonts-noto-sans:NotoSans-Regular`, 1.0, 0.0);
     font-cjk         = (`fonts-noto-sans-cjk-jp:NotoSansCJKjp-Regular`, 1.0, 0.0);
     par-margin-ratio = (0.6, 0.6);
     leading-ratio    = 1.4;
   |)
   let cfg-font-emph = (|
-    size             = 20pt;
+    size             = 16pt;
     font-latin       = (`fonts-noto-sans:NotoSans-Bold`, 1.0, 0.0);
     font-cjk         = (`fonts-noto-sans-cjk-jp:NotoSansCJKjp-Bold`, 1.0, 0.0);
     par-margin-ratio = (0.6, 0.6);
@@ -123,11 +123,11 @@ end = struct
   |)
 
   let cfg-font-mono = (|
-    size             = 20pt;
+    size             = 16pt;
     font-latin       = (`fonts-noto-sans-mono:NotoSansMono-Regular`, 1.0, 0.0);
-    font-cjk         = (`fonts-noto-sans-cjk-jp:NotoSansMono-Regular`, 1.0, 0.0);
+    font-cjk         = (`fonts-noto-sans-cjk-jp:NotoSansMonoCJKjp-Regular`, 1.0, 0.0);
     par-margin-ratio = (0.6, 0.6);
-    leading-ratio    = 1.4;
+    leading-ratio    = 1.0;
   |)
 
   let cfg-text = (|
@@ -146,7 +146,7 @@ end = struct
   |)
 
   let color-bg = SlydifiColor.html-color 0x00123E
-  let color-fg = SlydifiColor.html-color 0x282828
+  let color-fg = SlydifiColor.html-color 0xFFFFFF
 
   let cfg-color = (|
     bg        = color-bg;
@@ -170,7 +170,7 @@ end = struct
     header-basepos           = 3pt;
     footer-basepos           = 10pt;
     main-grid                = 50pt;
-    sub-grid                 = 25pt; % この値は適当です
+    sub-grid                 = 10pt; % この値は適当です
     bg-gr-start-point        = 0pt;
     title-padding-lr         = 12pt;
     title-padding-upper-line = 5pt;
@@ -323,8 +323,8 @@ end = struct
       ]
     in
 
-    (SlydifiScheme.frame-scheme cfg-paper cfg-color cfg-spacing is-first-page is-draft-mode)
-      bg-graphics ctx block-nil
+    (SlydifiScheme.frame-scheme cfg-paper cfg-color cfg-spacing is-first-page is-draft-mode
+      bg-graphics ctx block-nil)
         +++ (read-block ctx bt)
 
   let-block ctx +frame title inner =
@@ -533,8 +533,11 @@ end = struct
 
 
   % 定義は適当です
-  let gen-label-rule depth depthlst ctx =
-    depth |> arabic |> embed-string |> read-inline ctx
+  let gen-label-rule d idxlst =
+    match (List.length idxlst + d - 1) with
+    | 1 -> label-dia idxlst
+    | 2 -> label-tria idxlst
+    | _ -> label-circ idxlst
 
   let-block ctx +listing ?:depth item =
     let depth = depth |> Option.from 1 in

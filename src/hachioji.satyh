@@ -12,15 +12,17 @@
 module SlydifiHachioji : sig
 
 % configs
-  val cfg-pager: (|
-    width: length;
-    height: length;
-  |)
+  %val cfg-pager: (|
+  %  width: length;
+  %  height: length;
+  %|)
 
   val cfg-text: (|
     normal: config-font;
+    mono: config-font;
     emph: config-font;
     frame-title: config-font;
+    header: config-font;
     footer: config-font;
     slide-title: config-font;
     slide-author: config-font;
@@ -41,13 +43,13 @@ module SlydifiHachioji : sig
     header      : color;
     footer      : color;
     quote       : color;
-    quiote-line : color;
+    quote-line : color;
   |)
 
   val cfg-spacing: (|
     text-width               : length;
     text-height              : length;
-    text-horizntal-margin    : length;
+    text-horizontal-margin   : length;
     text-vertical-margin     : length;
     header-basepos           : length;
     footer-basepos           : length;
@@ -77,8 +79,8 @@ module SlydifiHachioji : sig
   direct +multiframe : [int; inline-text; block-text] block-cmd
 
   direct \emph : [(int -> bool)?; inline-text] inline-cmd
-  direct \textbf : [(int -> bool)?; inline-text] inline-cmd
-  direct \lint : [inline-text?; string] inline-cmd
+  %direct \textbf : [(int -> bool)?; inline-text] inline-cmd
+  direct \link : [inline-text?; string] inline-cmd
   direct \code : [string] inline-cmd
 
   direct +quote : [block-text] block-cmd
@@ -86,8 +88,8 @@ module SlydifiHachioji : sig
   direct +listing : [int?; itemize] block-cmd
   direct \listing : [int?; itemize] inline-cmd
   direct +listing-overlay : [int?; itemize] block-cmd
-  direct +enumerate-overlay : [int?; itemize] block-cmd
-  direct \cond-item : [(int -> bool)] inline-cmd
+  %direct +enumerate-overlay : [int?; itemize] block-cmd
+  %direct \cond-item : [(int -> bool)] inline-cmd
   val label-dia  : int list -> context -> inline-boxes
   val label-tria : int list -> context -> inline-boxes
   val label-circ : int list -> context -> inline-boxes
@@ -162,11 +164,12 @@ end = struct
   let cfg-spacing = (|
     text-width               = cfg-paper#width -' 20pt *' 2.;
     text-height              = cfg-paper#height -' 15pt *' 2.;
-    text-horizntal-margin    = 20pt;
+    text-horizontal-margin   = 20pt;
     text-vertical-margin     = 10pt;
-    header-baseops           = 3pt;
+    header-basepos           = 3pt;
     footer-basepos           = 10pt;
     main-grid                = 50pt;
+    sub-grid                 = 25pt; % この値は適当です
     bg-gr-start-point        = 0pt;
     title-padding-lr         = 12pt;
     title-padding-upper-line = 5pt;
@@ -248,7 +251,7 @@ end = struct
         let ib-color = embed-block-top ctx-author author-width
           (fun ctx -> (bbs-author ctx |> List.fold-left (+++) block-nil))
         in
-        SlydifiScheme.put-text (title-xmax +' title-mgn, title-ymin -' title-mgn) (0., 1.) ib-author
+        SlydifiScheme.put-text (title-xmax +' title-mgn, title-ymin -' title-mgn) (0., 1.) ib-color
       in
 
       let gr-date =
@@ -302,7 +305,7 @@ end = struct
             line-break true true ctx (( read-inline ctx it) ++ inline-fil))
         in
         let ib-title = embed-block-top ctx-title title-width
-          (fun ctx -> (bbs-title ctx |> List.fold-left (+++) block nil))
+          (fun ctx -> (bbs-title ctx |> List.fold-left (+++) block-nil))
         in
         SlydifiScheme.put-text (title-xmax +' title-mgn, title-ymax +' title-mgn) (0., 0.) ib-title
       in
@@ -321,12 +324,12 @@ end = struct
 
     (SlydifiScheme.frame-scheme cfg-paper cfg-color cfg-spacing is-first-page is-draft-mode)
       bg-graphics ctx block-nil
-        +++ (read-bolock ctx bt)
+        +++ (read-block ctx bt)
 
   let-block ctx +frame title inner =
     let deco (x, y) wid hgt dpt =
       let path1 =
-        let xL = x -' cfg-spacing#text-horizntal-margin +' cfg-spacing#title-padding-lr in
+        let xL = x -' cfg-spacing#text-horizontal-margin +' cfg-spacing#title-padding-lr in
         let yB = y in
         let xR = xL +' cfg-paper#width -' cfg-spacing#title-padding-lr *' 2.0 in
         let yT = yB +' cfg-spacing#title-line-width in
@@ -340,10 +343,10 @@ end = struct
         |> SlydifiScheme.set-font-config cfg-text#frame-title
         |> set-text-color cfg-color#title
         |> set-paragraph-margin 0pt cfg-spacing#title-padding-lower-line in
-      let ib-title = read-inline ctx-title in
+      let ib-title = read-inline ctx-title title in
       block-frame-breakable ctx-title
         (
-          cfg-spacing#title-padding-lr -' cfg-spacing#text-horizntal-margin,
+          cfg-spacing#title-padding-lr -' cfg-spacing#text-horizontal-margin,
           cfg-spacing#title-padding-lr,
           0pt,
           cfg-spacing#title-padding-upper-line +' cfg-spacing#title-line-width
@@ -373,9 +376,9 @@ end = struct
     let frame-f itlst btlst =
       let deco (x, y) wid hgt dpt =
         let path1 =
-          let xL = x -' cfg-spacing#text-horizntal-margin +' cfg-spacing#title-padding-lr in
+          let xL = x -' cfg-spacing#text-horizontal-margin +' cfg-spacing#title-padding-lr in
           let yB = y in
-          let yR = xL +' cfg-paper#width -' cfg-spacing#title-padding-lr *' 2.0 in
+          let xR = xL +' cfg-paper#width -' cfg-spacing#title-padding-lr *' 2.0 in
           let yT = yB +' cfg-spacing#title-line-width in
           Gr.rectangle (xL, yT) (xR, yB)
         in
@@ -390,7 +393,7 @@ end = struct
       let ib-title = read-inline ctx-title (Option.from {} (itlst |> List.nth 0)) in
       block-frame-breakable ctx-title
         (
-          cfg-spacing#title-padding-lr -' cfg-spacing#text-horizntal-margin,
+          cfg-spacing#title-padding-lr -' cfg-spacing#text-horizontal-margin,
           cfg-spacing#title-padding-lr,
           0pt,
           cfg-spacing#title-padding-upper-line +' cfg-spacing#title-line-width
@@ -408,16 +411,17 @@ end = struct
       SlydifiScheme.frame-scheme cfg-paper cfg-color cfg-spacing is-first-page is-draft-mode bg-graphics
         ctx (bb-title +++ bb-inner)
     in
-    SlydifiOverlay.frame-scheme-overlay ctx-n-layer frame-f itlst btlst
+    SlydifiOverlay.frame-scheme-overlay ctx n-layer frame-f itlst btlst
 
   let-inline ctx \emph ?:bcf it =
     let bcf = Option.from (fun _ -> true) bcf in
-    let ctx2 = SlydifiOverlay.select dcf
-      (ctx |> set-text-color cfg-color#emph)
+    let ctx2 = SlydifiOverlay.select bcf
+      (ctx |> set-text-color cfg-color#emph
            |> SlydifiScheme.set-fonts cfg-text#emph
-        ctx
+      ) ctx
     in
     (read-inline ctx2 it)
+
 
   let-inline ctx \link ?:it url =
     let ctx2 = ctx |> set-text-color cfg-color#link in
@@ -430,7 +434,7 @@ end = struct
       | None    -> (embed-string url)
       | Some(v) -> v
     in
-    read-inline ctx-lint {\href(url){#text;}}
+    read-inline ctx-link {\href(url){#text;}}
 
   let-block ctx +quote bt =
     let deco (x, y) w h d =
@@ -462,7 +466,7 @@ end = struct
         |> close-with-line
     in
     let gr (x, y) = [fill cfg-color#title (path (x, y))] in
-    inline-graphics 8pt 8pt 0pt (gr) ++ inline-slip 8pt
+    inline-graphics 8pt 8pt 0pt (gr) ++ inline-skip 8pt
 
   let label-tria (idx :: _) ctx =
     let path (x, y) =
@@ -498,7 +502,7 @@ end = struct
   let-rec power-float-int r m =
     match m with
     | 0 -> 1.
-    | _ -> (power-float-int t (m - 1)) *. r
+    | _ -> (power-float-int r (m - 1)) *. r % 合っているかわからないです
 
   let max-float f1 f2 = if (1pt *' f1) >' (1pt *' f2) then f1 else f2
 
@@ -526,6 +530,11 @@ end = struct
 
   let hachioji-item = gen-hachioji-item 1
 
+
+  % 定義は適当です
+  let gen-label-rule depth depthlst ctx =
+    depth |> arabic |> embed-string |> read-inline ctx
+
   let-block ctx +listing ?:depth item =
     let depth = depth |> Option.from 1 in
     read-block ctx '< +genlisting(gen-label-rule depth)(gen-hachioji-item depth)(item); >
@@ -547,9 +556,9 @@ end = struct
 
   let-block ctx +enumrate-overlay ?:depth item =
     let depth = depth |> Option.from 1 in
-    read-block ctx '< +xgenlisting(Enumitem.dot-atrabic)(
+    read-block ctx '< +xgenlisting(Enumitem.dot-arabic)(
       fun ctx dp label inner -> (
-        let () = display-massege (
+        let () = display-message (
           `param-item-overlay: ` ^
             (if (EnumitemParam.get param-item-overlay) 1 then `1` else ` `) ^
             (if (EnumitemParam.get param-item-overlay) 2 then `2` else ` `) ^
@@ -593,7 +602,7 @@ end = struct
   let-inline ctx \footnote it =
     let size = get-font-size ctx in
     let ibf num =
-      let it-num = embed-string (arabi num) in
+      let it-num = embed-string (arabic num) in
       let ctx =
         ctx |> set-font-size (size *' 0.75)
             |> set-manual-rising (size *' 0.25)

@@ -3,18 +3,6 @@
 @require: easytable/easytable
 @require: class-slydifi-theme-hachioji/hachioji
 
-let-inline \link url = {
-  \ctx(fun ctx ->
-  ctx |> set-text-color (SlydifiColor.html-color 0x0366D6)
-      |> set-font Latin (`lmmono`, 1., 0.)
-  ){\Annot.href(url)(embed-string url);}
-}
-let-inline \href url it = {
-  \ctx(fun ctx ->
-    ctx |> set-text-color (SlydifiColor.html-color 0x0366D6)
-  ){\Annot.href(url)(it);}
-}
-
 open FigBox
 open SlydifiOverlay
 open EasyTableAlias
@@ -105,7 +93,7 @@ SlydifiHachioji.document(|
         最も簡素なテーマ．
 
       * `hakodate` (module name: `SlydifiHakodate`):
-        \href(`https://github.com/gruvbox-community/gruvbox`){Gruvbox} の色をベースにしたテーマ．
+        \link?:({Gruvbox})(`https://github.com/gruvbox-community/gruvbox`); の色をベースにしたテーマ．
 
       * `akasaka` (module name: `SlydifiAkasaka`):
         灰色のスタンダードなテーマ．

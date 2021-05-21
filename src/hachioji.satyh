@@ -423,7 +423,6 @@ end = struct
     in
     (read-inline ctx2 it)
 
-
   let-inline ctx \link ?:it url =
     let ctx2 = ctx |> set-text-color cfg-color#link in
     let ctx-link = match it with

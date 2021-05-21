@@ -124,7 +124,7 @@ end = struct
 
   let cfg-font-mono = (|
     size             = 16pt;
-    font-latin       = (`fonts-noto-sans-mono:NotoSansMono-Regular`, 1.0, 0.0);
+    font-latin       = (`fonts-noto-sans:NotoSans-Regular`, 1.0, 0.0);
     font-cjk         = (`fonts-noto-sans-cjk-jp:NotoSansMonoCJKjp-Regular`, 1.0, 0.0);
     par-margin-ratio = (0.6, 0.6);
     leading-ratio    = 1.0;

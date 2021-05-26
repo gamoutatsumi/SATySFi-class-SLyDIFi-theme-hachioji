@@ -108,14 +108,14 @@ end = struct
   |)
 
   let cfg-font-normal = (|
-    size             = 16pt;
+    size             = 20pt;
     font-latin       = (`fonts-noto-sans:NotoSans-Regular`, 1.0, 0.0);
     font-cjk         = (`fonts-noto-sans-cjk-jp:NotoSansCJKjp-Regular`, 1.0, 0.0);
     par-margin-ratio = (0.6, 0.6);
     leading-ratio    = 1.4;
   |)
   let cfg-font-emph = (|
-    size             = 16pt;
+    size             = 20pt;
     font-latin       = (`fonts-noto-sans:NotoSans-Bold`, 1.0, 0.0);
     font-cjk         = (`fonts-noto-sans-cjk-jp:NotoSansCJKjp-Bold`, 1.0, 0.0);
     par-margin-ratio = (0.6, 0.6);
@@ -123,7 +123,7 @@ end = struct
   |)
 
   let cfg-font-mono = (|
-    size             = 16pt;
+    size             = 20pt;
     font-latin       = (`fonts-noto-sans:NotoSans-Regular`, 1.0, 0.0);
     font-cjk         = (`fonts-noto-sans-cjk-jp:NotoSansMonoCJKjp-Regular`, 1.0, 0.0);
     par-margin-ratio = (0.6, 0.6);
@@ -134,10 +134,10 @@ end = struct
     normal = cfg-font-normal;
     mono   = cfg-font-mono;
     emph   = cfg-font-emph;
-    frame-title = (| cfg-font-emph with size = 20pt; |);
-    header = (| cfg-font-normal with size = 12pt; |);
-    footer = (| cfg-font-normal with size = 12pt; |);
-    slide-title = (| cfg-font-emph with size = 32pt; |);
+    frame-title = (| cfg-font-emph with size = 24pt; |);
+    header = (| cfg-font-normal with size = 14pt; |);
+    footer = (| cfg-font-normal with size = 14pt; |);
+    slide-title = (| cfg-font-emph with size = 28pt; |);
     slide-author = (| cfg-font-emph with size = 20pt; |);
     slide-date = (| cfg-font-emph with size = 20pt; |);
     section-title = (| cfg-font-emph with size = 28pt; |);
@@ -163,10 +163,10 @@ end = struct
   |)
 
   let cfg-spacing = (|
-    text-width               = cfg-paper#width -' 20pt *' 2.;
-    text-height              = cfg-paper#height -' 15pt *' 2.;
-    text-horizontal-margin   = 20pt;
-    text-vertical-margin     = 10pt;
+    text-width               = cfg-paper#width -' 25pt *' 2.;
+    text-height              = cfg-paper#height -' 20pt *' 2.;
+    text-horizontal-margin   = 30pt;
+    text-vertical-margin     = 20pt;
     header-basepos           = 3pt;
     footer-basepos           = 10pt;
     main-grid                = 50pt;
@@ -530,8 +530,6 @@ end = struct
 
   let hachioji-item = gen-hachioji-item 1
 
-
-  % 定義は適当です
   let gen-label-rule d idxlst =
     match (List.length idxlst + d - 1) with
     | 1 -> label-dia idxlst

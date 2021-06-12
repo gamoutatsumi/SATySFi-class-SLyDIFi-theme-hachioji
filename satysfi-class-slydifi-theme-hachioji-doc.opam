@@ -14,7 +14,7 @@ dev-repo: "git+https://github.com/gamoutatsumi/satysfi-class-slydifi-theme-hachi
 depends: [
   "satysfi" {>= "0.0.6" & < "0.0.7"}
   "satyrographos" {>= "0.0.2" & < "0.0.3"}
-  "satysfi-class-slydifi" {= "0.3.0"}
+  "satysfi-class-slydifi" {>= "0.3.0"}
   "satysfi-easytable" {>= "1.0.0"}
 ]
 build: [
